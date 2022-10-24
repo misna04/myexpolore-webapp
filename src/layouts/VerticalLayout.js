@@ -1,4 +1,4 @@
-import * as React from "react"
+import React, { forwardRef } from "react"
 import { styled, alpha, useTheme } from "@mui/material/styles"
 import {
     AppBar as MuiAppBar,
@@ -19,6 +19,7 @@ import {
     Divider,
     ListItemIcon
 } from "@mui/material"
+import { Link, Outlet } from "react-router-dom"
 
 import MenuIcon from "@mui/icons-material/Menu"
 import SearchIcon from "@mui/icons-material/Search"
@@ -253,6 +254,12 @@ export default function PrimarySearchAppBar() {
         </Menu>
     )
 
+    let listItemProps = {
+        component: forwardRef((props, ref) => (
+            <Link ref={ref} {...props} to={props.url} />
+        ))
+    }
+
     return (
         <Box sx={{ display: "flex" }}>
             <CssBaseline />
@@ -353,33 +360,42 @@ export default function PrimarySearchAppBar() {
                             disablePadding
                             sx={{ display: "block" }}
                         >
-                            <ListItemButton
-                                sx={{
-                                    minHeight: 48,
-                                    justifyContent: open ? "initial" : "center",
-                                    px: 2.5
-                                }}
-                            >
-                                <ListItemIcon
+                            <Link to={text.url}>
+                                <ListItemButton
                                     sx={{
-                                        minWidth: 0,
-                                        mr: open ? 3 : "auto",
-                                        justifyContent: "center"
+                                        minHeight: 48,
+                                        justifyContent: open
+                                            ? "initial"
+                                            : "center",
+                                        px: 2.5
                                     }}
                                 >
-                                    {text.icon}
-                                </ListItemIcon>
-                                <ListItemText
-                                    primary={text.name}
-                                    sx={{ opacity: open ? 1 : 0 }}
-                                />
-                            </ListItemButton>
+                                    <ListItemIcon
+                                        sx={{
+                                            minWidth: 0,
+                                            mr: open ? 3 : "auto",
+                                            justifyContent: "center"
+                                        }}
+                                    >
+                                        {text.icon}
+                                    </ListItemIcon>
+                                    <ListItemText
+                                        primary={text.name}
+                                        sx={{ opacity: open ? 1 : 0 }}
+                                    />
+                                </ListItemButton>
+                            </Link>
                         </ListItem>
                     ))}
                 </List>
             </Drawer>
-            {renderMobileMenu}
-            {renderMenu}
+            {/* {renderMobileMenu}
+            {renderMenu} */}
+            <Box component="main" sx={{ flexGrow: 1, p: 3 }}>
+                <DrawerHeader />
+                <Toolbar />
+                <Outlet />
+            </Box>
         </Box>
     )
 }
